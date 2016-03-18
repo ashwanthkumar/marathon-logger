@@ -11,9 +11,10 @@ import (
 )
 
 type Task struct {
-	App    string
-	Labels map[string]string
-	TaskID string
+	App      string
+	Labels   map[string]string
+	TaskID   string
+	Hostname string
 }
 
 const LogEnabledLabel = "logs.enabled"
@@ -65,7 +66,7 @@ func (a *AppMonitor) monitorApps() error {
 	}
 
 	for _, app := range apps.Apps {
-		isLogEnabled := maps.GetBoolean(app.Labels, LogEnabledLabel, false)
+		isLogEnabled := maps.GetBoolean(app.Labels, LogEnabledLabel, true)
 		if isLogEnabled {
 			app, err := a.Client.Application(app.ID)
 			if err != nil {
@@ -73,9 +74,10 @@ func (a *AppMonitor) monitorApps() error {
 			}
 			for _, task := range app.Tasks {
 				taskInfo := Task{
-					App:    app.ID,
-					Labels: app.Labels,
-					TaskID: task.ID,
+					App:      app.ID,
+					Labels:   app.Labels,
+					TaskID:   task.ID,
+					Hostname: task.Host,
 				}
 				a.TasksChannel <- taskInfo
 			}

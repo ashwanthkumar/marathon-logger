@@ -6,15 +6,18 @@ import (
 	"os"
 	"time"
 
-	"github.com/gambol99/go-marathon"
+	marathon "github.com/gambol99/go-marathon"
 	flag "github.com/spf13/pflag"
 )
 
 var marathonURI string
 var mesosSlavePort int
 var appCheckInterval time.Duration
+var taskMaxHeartBeatInterval time.Duration
 
 var appMonitor AppMonitor
+var taskManager TaskManager
+var logManager LogManager
 
 func main() {
 	os.Args[0] = "marathon-logger"
@@ -31,13 +34,31 @@ func main() {
 		CheckInterval: appCheckInterval,
 	}
 	appMonitor.Start()
+
+	taskManager = TaskManager{
+		SlavePort:                 mesosSlavePort,
+		InputTasksChannel:         appMonitor.TasksChannel,
+		MaxTasksHeartBeatInterval: taskMaxHeartBeatInterval,
+	}
+	taskManager.Start()
+
+	loggers := make(map[string]Logger)
+	loggers["rsyslog"] = &Rsyslog{}
+	logManager = LogManager{
+		Add:           taskManager.AddLogs,
+		Remove:        taskManager.RemoveLogs,
+		Loggers:       loggers,
+		DefaultLogger: "rsyslog",
+	}
+
 	appMonitor.RunWaitGroup.Wait()
 }
 
 func init() {
 	flag.StringVar(&marathonURI, "uri", "", "Marathon URI to connect")
 	flag.IntVar(&mesosSlavePort, "slave-port", 5051, "Mesos slave port")
-	flag.DurationVar(&appCheckInterval, "check-interval", 30*time.Second, "Frequency at which we check for new tasks")
+	flag.DurationVar(&appCheckInterval, "app-check-interval", 30*time.Second, "Frequency at which we check for new tasks")
+	flag.DurationVar(&taskMaxHeartBeatInterval, "task-max-heart-beat-interval", 30*time.Minute, "Max heartbeat interval after which the task is considered dead and logger is removed")
 }
 
 func marathonClient(uri string) (marathon.Marathon, error) {
