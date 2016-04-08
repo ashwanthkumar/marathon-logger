@@ -1,6 +1,7 @@
 APPNAME = marathon-logger
 VERSION=0.0.1-dev
-TESTFLAGS=-v
+TESTFLAGS=-v -cover -covermode=atomic -bench=.
+TEST_COVERAGE_THRESHOLD=55.0
 
 build:
 	go build -tags netgo -ldflags "-w" -o ${APPNAME} .
@@ -18,15 +19,19 @@ all: setup
 	install
 
 setup:
-	go get -u github.com/spf13/pflag
-	go get -u github.com/ashwanthkumar/slack-go-webhook
-	go get -u github.com/gambol99/go-marathon
-	go get -u github.com/parnurzeal/gorequest
-	# Test deps
-	go get -u github.com/stretchr/testify/assert
+	go get github.com/wadey/gocovmerge
+	glide install
 
 test-only:
-	go test ${TESTFLAGS} github.com/ashwanthkumar/marathon-alerts/${name}
+	go test ${TESTFLAGS} github.com/ashwanthkumar/marathon-logger/${name}
 
 test:
-	go test ${TESTFLAGS} github.com/ashwanthkumar/marathon-alerts/
+	go test ${TESTFLAGS} github.com/ashwanthkumar/marathon-logger/
+
+test-ci: test
+	gocovmerge *.txt > coverage.txt
+	@go tool cover -html=coverage.txt -o coverage.html
+	@go tool cover -func=coverage.txt | grep "total:" | awk '{print $$3}' | sed -e 's/%//' > cov_total.out
+	@bash -c 'COVERAGE=$$(cat cov_total.out);	\
+	echo "Current Coverage % is $$COVERAGE, expected is ${TEST_COVERAGE_THRESHOLD}.";	\
+	exit $$(echo $$COVERAGE"<${TEST_COVERAGE_THRESHOLD}" | bc -l)'
