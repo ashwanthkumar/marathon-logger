@@ -1,0 +1,9 @@
+package: github.com/ashwanthkumar/marathon-logger
+import:
+- package: github.com/ashwanthkumar/golang-utils
+  subpackages:
+  - maps
+  - netutil
+- package: github.com/gambol99/go-marathon
+- package: github.com/parnurzeal/gorequest
+- package: github.com/spf13/pflag

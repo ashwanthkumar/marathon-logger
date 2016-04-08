@@ -1,0 +1,27 @@
+hash: 6404b54f0c256ae8d27f88e065235dc807c32bb054dce40da9cd248932c6b1f2
+updated: 2016-04-08T08:59:22.416497006+05:30
+imports:
+- name: github.com/ashwanthkumar/golang-utils
+  version: 6362d7ff76b62be7ac4ef53aad5812791b390974
+  subpackages:
+  - maps
+  - netutil
+- name: github.com/donovanhide/eventsource
+  version: c3f57f280ec708df24886d9e62f2fd178d69d8e8
+- name: github.com/gambol99/go-marathon
+  version: a78e3aa5d5ca7d5b14eafc3239d61bb53af17434
+- name: github.com/google/go-querystring
+  version: 6bb77fe6f42b85397288d4f6f67ac72f8f400ee7
+  subpackages:
+  - query
+- name: github.com/moul/http2curl
+  version: 1812aee76a1ce98d604a44200c6a23c689b17a89
+- name: github.com/parnurzeal/gorequest
+  version: 91b42fce877cc6af96c45818665a4c615cc5f4ee
+- name: github.com/spf13/pflag
+  version: 7f60f83a2c81bc3c3c0d5297f61ddfa68da9d3b7
+- name: golang.org/x/net
+  version: e45385e9b226f570b1f086bf287b25d3d4117776
+  subpackages:
+  - publicsuffix
+devImports: []
