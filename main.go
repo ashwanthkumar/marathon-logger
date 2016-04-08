@@ -14,6 +14,8 @@ var marathonURI string
 var mesosSlavePort int
 var appCheckInterval time.Duration
 var taskMaxHeartBeatInterval time.Duration
+var rsyslogConfigurationDir string
+var rsyslogRestartCommand string
 
 var appMonitor AppMonitor
 var taskManager TaskManager
@@ -43,13 +45,17 @@ func main() {
 	taskManager.Start()
 
 	loggers := make(map[string]Logger)
-	loggers["rsyslog"] = &Rsyslog{}
+	loggers["rsyslog"] = &Rsyslog{
+		ConfigLocation: rsyslogConfigurationDir,
+		RestartCommand: rsyslogRestartCommand,
+	}
 	logManager = LogManager{
 		Add:           taskManager.AddLogs,
 		Remove:        taskManager.RemoveLogs,
 		Loggers:       loggers,
 		DefaultLogger: "rsyslog",
 	}
+	logManager.Start()
 
 	appMonitor.RunWaitGroup.Wait()
 }
@@ -59,6 +65,8 @@ func init() {
 	flag.IntVar(&mesosSlavePort, "slave-port", 5051, "Mesos slave port")
 	flag.DurationVar(&appCheckInterval, "app-check-interval", 30*time.Second, "Frequency at which we check for new tasks")
 	flag.DurationVar(&taskMaxHeartBeatInterval, "task-max-heart-beat-interval", 30*time.Minute, "Max heartbeat interval after which the task is considered dead and logger is removed")
+	flag.StringVar(&rsyslogConfigurationDir, "rsyslog-configuration-dir", "/etc/rsyslog.d", "Location on the Filesystem where the rsyslog configurations needs to be written")
+	flag.StringVar(&rsyslogRestartCommand, "rsyslog-restart-cmd", "service rsyslog restart", "Restart command for rsyslog backend")
 }
 
 func marathonClient(uri string) (marathon.Marathon, error) {

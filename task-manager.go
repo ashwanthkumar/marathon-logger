@@ -102,7 +102,7 @@ func (t *TaskManager) run() {
 								FileName: file,
 							}
 							fmt.Printf("%v\n", taskInfo)
-							// t.AddLogs <- taskInfo
+							t.AddLogs <- taskInfo
 						}
 					} else {
 						fmt.Printf("[WARN] Couldn't find the executor that spun up the task %s", task.TaskID)
