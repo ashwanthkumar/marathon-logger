@@ -10,6 +10,7 @@ import (
 	marathon "github.com/gambol99/go-marathon"
 )
 
+// Task - Task related information
 type Task struct {
 	App      string
 	Labels   map[string]string
@@ -17,6 +18,7 @@ type Task struct {
 	Hostname string
 }
 
+// LogEnabledLabel  - Label to check if logging should be enabled or not
 const LogEnabledLabel = "logs.enabled"
 
 type AppMonitor struct {
@@ -66,7 +68,7 @@ func (a *AppMonitor) monitorApps() error {
 	}
 
 	for _, app := range apps.Apps {
-		isLogEnabled := maps.GetBoolean(app.Labels, LogEnabledLabel, true)
+		isLogEnabled := maps.GetBoolean(*app.Labels, LogEnabledLabel, true)
 		if isLogEnabled {
 			app, err := a.Client.Application(app.ID)
 			if err != nil {
@@ -75,7 +77,7 @@ func (a *AppMonitor) monitorApps() error {
 			for _, task := range app.Tasks {
 				taskInfo := Task{
 					App:      app.ID,
-					Labels:   app.Labels,
+					Labels:   *app.Labels,
 					TaskID:   task.ID,
 					Hostname: task.Host,
 				}
