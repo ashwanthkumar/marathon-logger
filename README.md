@@ -21,7 +21,7 @@ Usage of marathon-logger:
 Apart from the flags that are used while starting up, the functionality can be controlled at an app level using labels in the app specification. The following table explains the properties and it's usage.
 
 | Property | Description | Example |
-| :---: | :---: | :---: |
+| :--- | :--- | :--- |
 | logs.enabled | Enable or disable log monitoring for the app. Default - `false` | true |
 | logs.files | List of files to monitor via the backend. Default - `stdout` | stdout,stderr |
 
