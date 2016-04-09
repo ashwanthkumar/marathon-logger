@@ -5,8 +5,11 @@ import (
 	"sync"
 )
 
+// TODO - Add support for using multiple logging backends
+// LoggerToUse - Logging backend to use from app labes
 // const LoggerToUse = "logger.backend"
 
+// LogManager manages various logging backends
 type LogManager struct {
 	// Channel where we get tasks to start following
 	Add chan TaskInfo
@@ -20,6 +23,7 @@ type LogManager struct {
 	stopChannel  chan bool
 }
 
+// Start - Start the LogManager
 func (l *LogManager) Start() {
 	fmt.Println("Starting Log Manager...")
 	l.RunWaitGroup.Add(1)
@@ -28,6 +32,7 @@ func (l *LogManager) Start() {
 	fmt.Println("Log Manager Started.")
 }
 
+// Stop - Stop the LogManager
 func (l *LogManager) Stop() {
 	fmt.Println("Stopping Log Manager...")
 	close(l.stopChannel)

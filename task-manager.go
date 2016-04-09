@@ -81,7 +81,7 @@ func (t *TaskManager) run() {
 		case task := <-t.InputTasksChannel:
 			if task.Hostname == hostname {
 				// println("Got task for addition.. do what needs to be done")
-				fmt.Printf("%v\n", task)
+				// fmt.Printf("%v\n", task)
 				t.TasksMutex.Lock()
 				_, present := t.KnownTasks[task.TaskID]
 				if !present {
@@ -101,14 +101,14 @@ func (t *TaskManager) run() {
 								CWD:      executor.Directory,
 								FileName: file,
 							}
-							fmt.Printf("%v\n", taskInfo)
+							// fmt.Printf("%v\n", taskInfo)
 							t.AddLogs <- taskInfo
 						}
 					} else {
 						fmt.Printf("[WARN] Couldn't find the executor that spun up the task %s", task.TaskID)
 					}
 				} else {
-					// Already present - update it clock
+					// Already present - update the clock
 					t.KnownTasks[task.TaskID] = time.Now()
 				}
 				t.TasksMutex.Unlock()

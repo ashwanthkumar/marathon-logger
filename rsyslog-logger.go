@@ -30,11 +30,13 @@ input(type="imfile"
       Severity="info")
 `
 
+// Rsyslog backend implementation
 type Rsyslog struct {
 	ConfigLocation string
 	RestartCommand string
 }
 
+// AddTask - Adds a task definition file to FS
 func (r *Rsyslog) AddTask(taskInfo TaskInfo) error {
 	fmt.Printf("[Rsyslog] Add task info for %v\n", taskInfo)
 	template, err := r.render(taskInfo)
@@ -42,6 +44,7 @@ func (r *Rsyslog) AddTask(taskInfo TaskInfo) error {
 		fmt.Printf("[ERROR] %v\n", err)
 		return err
 	}
+	// TODO - Support multiple file configurations
 	configFileLocation := fmt.Sprintf("%s/%s-%s.conf", r.ConfigLocation, CommonPrefixToConfigFiles, taskInfo.TaskID)
 	err = ioutil.WriteFile(configFileLocation, []byte(template), 0644)
 	if err != nil {
@@ -49,14 +52,16 @@ func (r *Rsyslog) AddTask(taskInfo TaskInfo) error {
 		return err
 	}
 	err = exec.Command("/bin/sh", "-c", r.RestartCommand).Run()
-	return nil
+	return err
 }
 
+// RemoveTask - Remove a task definition from the FS
 func (r *Rsyslog) RemoveTask(taskId string) error {
 	fmt.Printf("[Rsyslog] Remove task info for %v\n", taskId)
 	return nil
 }
 
+// TODO - Integrate it with LogManager
 func (r *Rsyslog) ExistingTasks() []string {
 	return []string{}
 }
