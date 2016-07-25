@@ -68,7 +68,7 @@ func (a *AppMonitor) monitorApps() error {
 	}
 
 	for _, app := range apps.Apps {
-		isLogEnabled := maps.GetBoolean(*app.Labels, LogEnabledLabel, true)
+		isLogEnabled := maps.GetBoolean(*app.Labels, LogEnabledLabel, false)
 		if isLogEnabled {
 			app, err := a.Client.Application(app.ID)
 			if err != nil {
