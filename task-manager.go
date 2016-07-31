@@ -94,7 +94,7 @@ func (t *TaskManager) run() {
 						t.KnownTasks[task.TaskID] = time.Now()
 						for _, file := range logFiles {
 							taskInfo := TaskInfo{
-								App:      task.App,
+								App:      strings.Replace(task.App, "/", "", -1),
 								Hostname: task.Hostname,
 								Labels:   task.Labels,
 								TaskID:   task.TaskID,
