@@ -3,6 +3,9 @@ VERSION=0.0.1-dev
 TESTFLAGS=-v -cover -covermode=atomic -bench=.
 TEST_COVERAGE_THRESHOLD=55.0
 
+setup:
+	glide install
+
 build:
 	go build -tags netgo -ldflags "-w" -o ${APPNAME} .
 
@@ -13,6 +16,14 @@ build-mac:
 	GOOS=darwin GOARCH=amd64 go build -tags netgo -ldflags "-w -s -X main.APP_VERSION=${VERSION}" -v -o ${APPNAME}-darwin-amd64 .
 
 build-all: build-mac build-linux
+
+ci:
+	APPNAME=${APPNAME} bin/ci-run.sh
+
+clean:
+	rm -f ${APPNAME}
+	rm -f ${APPNAME}-linux-amd64
+	rm -f ${APPNAME}-darwin-amd64
 
 all: setup
 	build
