@@ -14,10 +14,6 @@ import (
 
 const LogFilesToMonitor = "logs.files"
 
-func CleanAppName(appName string) string {
-	return strings.Replace(appName[1:], "/", "", -1)
-}
-
 type TaskInfo struct {
 	App      string
 	Labels   map[string]string
@@ -25,6 +21,11 @@ type TaskInfo struct {
 	Hostname string
 	CWD      string // Current working directory of the task in the slave
 	FileName string // Actual file name to that we need monitor for logs
+}
+
+// CleanAppName cleans the app-name string for `/` characters
+func (t *TaskInfo) CleanAppName() string {
+	return strings.Replace(t.App[1:], "/", "-", -1)
 }
 
 // TaskManager - Enhances the Task with FileName and CWD info
@@ -98,7 +99,7 @@ func (t *TaskManager) run() {
 						t.KnownTasks[task.TaskID] = time.Now()
 						for _, file := range logFiles {
 							taskInfo := TaskInfo{
-								App:      CleanAppName(task.App),
+								App:      task.App,
 								Hostname: task.Hostname,
 								Labels:   task.Labels,
 								TaskID:   task.TaskID,
