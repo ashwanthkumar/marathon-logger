@@ -14,6 +14,10 @@ import (
 
 const LogFilesToMonitor = "logs.files"
 
+func CleanAppName(appName string) string {
+	return appName[1:len(appName)]
+}
+
 type TaskInfo struct {
 	App      string
 	Labels   map[string]string
