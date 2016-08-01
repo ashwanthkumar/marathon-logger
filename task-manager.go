@@ -15,7 +15,7 @@ import (
 const LogFilesToMonitor = "logs.files"
 
 func CleanAppName(appName string) string {
-	return appName[1:len(appName)]
+	return strings.Replace(appName[1:], "/", "", -1)
 }
 
 type TaskInfo struct {
