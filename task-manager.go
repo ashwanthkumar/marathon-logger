@@ -23,6 +23,11 @@ type TaskInfo struct {
 	FileName string // Actual file name to that we need monitor for logs
 }
 
+// CleanAppName cleans the app-name string for `/` characters
+func (t *TaskInfo) CleanAppName() string {
+	return strings.Replace(t.App[1:], "/", "-", -1)
+}
+
 // TaskManager - Enhances the Task with FileName and CWD info
 // Message Flow: App Monitor -> Task Manager -> Log Manager
 type TaskManager struct {
@@ -94,7 +99,7 @@ func (t *TaskManager) run() {
 						t.KnownTasks[task.TaskID] = time.Now()
 						for _, file := range logFiles {
 							taskInfo := TaskInfo{
-								App:      strings.Replace(task.App, "/", "", -1),
+								App:      task.App,
 								Hostname: task.Hostname,
 								Labels:   task.Labels,
 								TaskID:   task.TaskID,

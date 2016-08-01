@@ -25,7 +25,7 @@ module(load="imfile")
 
 input(type="imfile"
       File="{{ .CWD }}/{{ .FileName }}"
-			Tag="{{.App}}	{{.TaskID}}"
+			Tag="{{.CleanAppName()}}	{{.TaskID}}"
 			statefile="{{ .TaskID }}"
       Severity="info")
 `
