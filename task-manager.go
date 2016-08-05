@@ -3,12 +3,12 @@ package main
 import (
 	"fmt"
 	"log"
+	"os"
 	"strings"
 	"sync"
 	"time"
 
 	"github.com/ashwanthkumar/golang-utils/maps"
-	"github.com/ashwanthkumar/golang-utils/netutil"
 	"github.com/ashwanthkumar/marathon-logger/mesos"
 )
 
@@ -67,7 +67,7 @@ func (t *TaskManager) Stop() {
 }
 
 func (t *TaskManager) run() {
-	hostname, err := netutil.FullyQualifiedHostname()
+	hostname, err := os.Hostname()
 	if err != nil {
 		log.Fatalf("Error - %v\n", err)
 	}
