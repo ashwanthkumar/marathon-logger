@@ -71,6 +71,7 @@ func (t *TaskManager) run() {
 	if err != nil {
 		log.Fatalf("Error - %v\n", err)
 	}
+	log.Printf("Looking for tasks on %v", hostname)
 	running := true
 	for running {
 		select {
@@ -84,40 +85,40 @@ func (t *TaskManager) run() {
 				}
 			}
 		case task := <-t.InputTasksChannel:
-			if task.Hostname == hostname {
-				// println("Got task for addition.. do what needs to be done")
-				// fmt.Printf("%v\n", task)
-				t.TasksMutex.Lock()
-				_, present := t.KnownTasks[task.TaskID]
-				if !present {
-					fmt.Printf("TaskID %s is not monitored, sending it to LogManager", task.TaskID)
-					slaveState, _ := t.Client.SlaveState(fmt.Sprintf("http://%s:%d/state.json", hostname, t.SlavePort))
-					// fmt.Printf("%v\n", slaveState)
-					executor := slaveState.FindExecutor(task.TaskID)
-					if executor != nil {
-						logFiles := strings.Split(maps.GetString(task.Labels, LogFilesToMonitor, "stdout"), ",")
-						t.KnownTasks[task.TaskID] = time.Now()
-						for _, file := range logFiles {
-							taskInfo := TaskInfo{
-								App:      task.App,
-								Hostname: task.Hostname,
-								Labels:   task.Labels,
-								TaskID:   task.TaskID,
-								CWD:      executor.Directory,
-								FileName: file,
-							}
-							// fmt.Printf("%v\n", taskInfo)
-							t.AddLogs <- taskInfo
+			// if task.Hostname == hostname {
+			// println("Got task for addition.. do what needs to be done")
+			// fmt.Printf("%v\n", task)
+			t.TasksMutex.Lock()
+			_, present := t.KnownTasks[task.TaskID]
+			if !present {
+				fmt.Printf("TaskID %s is not monitored, sending it to LogManager", task.TaskID)
+				slaveState, _ := t.Client.SlaveState(fmt.Sprintf("http://%s:%d/state.json", hostname, t.SlavePort))
+				// fmt.Printf("%v\n", slaveState)
+				executor := slaveState.FindExecutor(task.TaskID)
+				if executor != nil {
+					logFiles := strings.Split(maps.GetString(task.Labels, LogFilesToMonitor, "stdout"), ",")
+					t.KnownTasks[task.TaskID] = time.Now()
+					for _, file := range logFiles {
+						taskInfo := TaskInfo{
+							App:      task.App,
+							Hostname: task.Hostname,
+							Labels:   task.Labels,
+							TaskID:   task.TaskID,
+							CWD:      executor.Directory,
+							FileName: file,
 						}
-					} else {
-						fmt.Printf("[WARN] Couldn't find the executor that spun up the task %s", task.TaskID)
+						// fmt.Printf("%v\n", taskInfo)
+						t.AddLogs <- taskInfo
 					}
 				} else {
-					// Already present - update the clock
-					t.KnownTasks[task.TaskID] = time.Now()
+					fmt.Printf("[WARN] Couldn't find the executor that spun up the task %s", task.TaskID)
 				}
-				t.TasksMutex.Unlock()
+			} else {
+				// Already present - update the clock
+				t.KnownTasks[task.TaskID] = time.Now()
 			}
+			t.TasksMutex.Unlock()
+			// }
 			// 1. Check if the task is running on our machine
 			// 2. Check if we already know the task
 			// 3. If yes, just update the KnownTasks map
