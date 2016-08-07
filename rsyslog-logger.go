@@ -69,6 +69,9 @@ func (r *Rsyslog) ExistingTasks() []string {
 func (r *Rsyslog) render(taskInfo TaskInfo) (string, error) {
 	var configInBytes bytes.Buffer
 	tmpl, err := template.New("").Parse(RsyslogTemplate)
+	if err != nil {
+		return "", err
+	}
 	err = tmpl.Execute(&configInBytes, &taskInfo)
 	return configInBytes.String(), err
 }
