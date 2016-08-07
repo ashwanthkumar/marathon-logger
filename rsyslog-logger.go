@@ -24,8 +24,8 @@ const RsyslogTemplate = `
 module(load="imfile")
 
 input(type="imfile"
-      File="{{ .CWD }}/{{ .FileName }}"
-			Tag="{{.CleanAppName()}}	{{.TaskID}}"
+			File="{{ .CWD }}/{{ .FileName }}"
+			Tag="{{ .CleanAppName }}	{{.TaskID}}"
 			statefile="{{ .TaskID }}"
       Severity="info")
 `
