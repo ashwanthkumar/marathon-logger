@@ -91,7 +91,7 @@ func (t *TaskManager) run() {
 			t.TasksMutex.Lock()
 			_, present := t.KnownTasks[task.TaskID]
 			if !present {
-				fmt.Printf("TaskID %s is not monitored, sending it to LogManager", task.TaskID)
+				log.Printf("TaskID %s is not monitored, sending it to LogManager", task.TaskID)
 				slaveState, _ := t.Client.SlaveState(fmt.Sprintf("http://%s:%d/state.json", hostname, t.SlavePort))
 				// fmt.Printf("%v\n", slaveState)
 				executor := slaveState.FindExecutor(task.TaskID)
@@ -111,7 +111,7 @@ func (t *TaskManager) run() {
 						t.AddLogs <- taskInfo
 					}
 				} else {
-					fmt.Printf("[WARN] Couldn't find the executor that spun up the task %s", task.TaskID)
+					log.Printf("[WARN] Couldn't find the executor that spun up the task %s", task.TaskID)
 				}
 			} else {
 				// Already present - update the clock
