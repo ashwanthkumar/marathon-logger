@@ -1,5 +1,5 @@
-hash: 6404b54f0c256ae8d27f88e065235dc807c32bb054dce40da9cd248932c6b1f2
-updated: 2016-08-08T16:09:33.870341696+05:30
+hash: f6fb8aeb274a3a8fc0a91354a0dcbb6301e877a15c97dd3280378bbbc72420b9
+updated: 2016-08-08T16:53:26.509201112+05:30
 imports:
 - name: github.com/ashwanthkumar/golang-utils
   version: 6362d7ff76b62be7ac4ef53aad5812791b390974
@@ -24,6 +24,10 @@ imports:
   version: 91b42fce877cc6af96c45818665a4c615cc5f4ee
 - name: github.com/spf13/pflag
   version: 7f60f83a2c81bc3c3c0d5297f61ddfa68da9d3b7
+- name: github.com/stretchr/testify
+  version: f390dcf405f7b83c997eac1b06768bb9f44dec18
+  subpackages:
+  - assert
 - name: golang.org/x/net
   version: e45385e9b226f570b1f086bf287b25d3d4117776
   subpackages:
@@ -37,7 +41,3 @@ testImports:
   version: d8ed2627bdf02c080bf22230dbb337003b7aba2d
   subpackages:
   - difflib
-- name: github.com/stretchr/testify
-  version: d77da356e56a7428ad25149ca77381849a6a5232
-  subpackages:
-  - assert
