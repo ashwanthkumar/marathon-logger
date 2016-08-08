@@ -14,8 +14,8 @@ build-mac:
 
 build-all: build-mac build-linux
 
-ci:
-	APPNAME=${APPNAME} bin/ci-run.sh
+ci: test
+	make build
 
 clean:
 	rm -f ${APPNAME}
