@@ -25,7 +25,7 @@ type TaskInfo struct {
 
 // CleanAppName cleans the app-name string for `/` characters
 func (t *TaskInfo) CleanAppName() string {
-	return strings.Replace(t.App[1:], "/", "-", -1)
+	return strings.Replace(t.App[1:], "/", ".", -1)
 }
 
 // TaskManager - Enhances the Task with FileName and CWD info
