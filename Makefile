@@ -14,9 +14,6 @@ build-mac:
 
 build-all: build-mac build-linux
 
-ci: test
-	make build
-
 clean:
 	rm -f ${APPNAME}
 	rm -f ${APPNAME}-linux-amd64
@@ -35,6 +32,8 @@ test-only:
 
 test:
 	go test ${TESTFLAGS} github.com/ashwanthkumar/marathon-logger/
+
+ci: test-ci
 
 test-ci: test
 	${GOPATH}/bin/gocovmerge *.txt > coverage.txt
