@@ -33,7 +33,7 @@ test-only:
 test:
 	go test ${TESTFLAGS} -coverprofile=main.txt github.com/ashwanthkumar/marathon-logger/
 
-ci: test-ci
+ci: test-ci build
 
 test-ci: test
 	${GOPATH}/bin/gocovmerge *.txt > coverage.txt
