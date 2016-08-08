@@ -3,9 +3,6 @@ VERSION=0.0.1-dev
 TESTFLAGS=-v -cover -covermode=atomic -bench=.
 TEST_COVERAGE_THRESHOLD=55.0
 
-setup:
-	glide install
-
 build:
 	go build -tags netgo -ldflags "-w" -o ${APPNAME} .
 
