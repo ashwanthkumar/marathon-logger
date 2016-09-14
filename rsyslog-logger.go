@@ -24,7 +24,7 @@ const RsyslogTemplate = `
 module(load="imfile")
 
 input(type="imfile"
-			File="{{ .CWD }}/{{ .FileName }}"
+			File="{{ .WorkDir }}/{{ .FileName }}"
 			Tag="{{ .CleanAppName }}	{{.TaskID}}"
 			statefile="{{ .TaskID }}"
       Severity="info")
@@ -32,6 +32,7 @@ input(type="imfile"
 
 // Rsyslog backend implementation
 type Rsyslog struct {
+	WorkDir string
 	ConfigLocation string
 	RestartCommand string
 }
@@ -44,13 +45,24 @@ func (r *Rsyslog) AddTask(taskInfo TaskInfo) error {
 		fmt.Printf("[ERROR] %v\n", err)
 		return err
 	}
-	// TODO - Support multiple file configurations
+
+	// We create symlink of the tasks' sandbox dir so that, 
+	// we can reduce the length of the file path that we provide as 
+	// part of configs in rsyslog's imfile directive.
+	// When the full file path > 200, rsyslog crashes with "buffer overflow" (evil smile)
+	err = os.Symlink(taskInfo.CWD, fmt.Sprintf("%s/%s", r.WorkDir, taskInfo.TaskID))
+	if err != nil {
+		fmt.Printf("[ERROR] %v\n", err)
+		return err
+	}
+
 	configFileLocation := fmt.Sprintf("%s/%s-%s.conf", r.ConfigLocation, CommonPrefixToConfigFiles, taskInfo.TaskID)
 	err = ioutil.WriteFile(configFileLocation, []byte(template), 0644)
 	if err != nil {
 		fmt.Printf("[ERROR] %v\n", err)
 		return err
 	}
+
 	err = exec.Command("/bin/sh", "-c", r.RestartCommand).Run()
 	return err
 }
