@@ -46,7 +46,8 @@ func main() {
 
 	loggers := make(map[string]Logger)
 	loggers["rsyslog"] = &Rsyslog{
-		ConfigLocation: rsyslogConfigurationDir,
+		WorkDir: workDir,
+		SyslogConfigLocation: rsyslogConfigurationDir,
 		RestartCommand: rsyslogRestartCommand,
 	}
 	logManager = LogManager{
@@ -65,6 +66,7 @@ func init() {
 	flag.IntVar(&mesosSlavePort, "slave-port", 5051, "Mesos slave port")
 	flag.DurationVar(&appCheckInterval, "app-check-interval", 30*time.Second, "Frequency at which we check for new tasks")
 	flag.DurationVar(&taskMaxHeartBeatInterval, "task-max-heart-beat-interval", 30*time.Minute, "Max heartbeat interval after which the task is considered dead and logger is removed")
+	flag.StringVar(&workDir, "work-dir", "/tmp/", "Location on the Filesystem where we create symlinks to app location base dir. This is needed to ensure the file paths don't become too long and crashes rsyslog")
 	flag.StringVar(&rsyslogConfigurationDir, "rsyslog-configuration-dir", "/etc/rsyslog.d", "Location on the Filesystem where the rsyslog configurations needs to be written")
 	flag.StringVar(&rsyslogRestartCommand, "rsyslog-restart-cmd", "service rsyslog restart", "Restart command for rsyslog backend")
 }
