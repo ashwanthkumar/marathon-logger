@@ -20,7 +20,9 @@ func TestCleanAppName(t *testing.T) {
 func TestRenderRsyslogTemplate(t *testing.T) {
 
 	hostname, err := os.Hostname()
-	var rsyslog Rsyslog
+	var rsyslog Rsyslog = Rsyslog {
+		WorkDir: "/foo/bar",
+	}
 	label := map[string]string{
 		"logs.enabled": "true",
 	}
@@ -41,12 +43,9 @@ func TestRenderRsyslogTemplate(t *testing.T) {
 # File - test_file_name.txt
 ######################################
 
-module(load="imfile")
-
 input(type="imfile"
 			File="/foo/bar/test_file_name.txt"
 			Tag="test.aayush.http	abcdefghij"
-			statefile="abcdefghij"
       Severity="info")
 `
 	template, err := rsyslog.render(taskInfo)
