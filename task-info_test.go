@@ -44,9 +44,9 @@ func TestRenderRsyslogTemplate(t *testing.T) {
 ######################################
 
 input(type="imfile"
-			File="/foo/bar/test_file_name.txt"
-			Tag="test.aayush.http	abcdefghij"
-      Severity="info")
+		File="/foo/bar/abcdefghij/test_file_name.txt"
+		Tag="test.aayush.http	abcdefghij"
+    Severity="info")
 `
 	template, err := rsyslog.render(taskInfo)
 	assert.NoError(t, err)
