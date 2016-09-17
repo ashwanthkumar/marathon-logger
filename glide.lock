@@ -1,5 +1,5 @@
 hash: f6fb8aeb274a3a8fc0a91354a0dcbb6301e877a15c97dd3280378bbbc72420b9
-updated: 2016-09-15T23:48:06.799367028+05:30
+updated: 2016-08-08T16:53:26.509201112+05:30
 imports:
 - name: github.com/ashwanthkumar/golang-utils
   version: 6362d7ff76b62be7ac4ef53aad5812791b390974
@@ -34,7 +34,7 @@ imports:
   - publicsuffix
 testImports:
 - name: github.com/davecgh/go-spew
-  version: 2df174808ee097f90d259e432cc04442cf60be21
+  version: 5215b55f46b2b919f50a1df0eaa5886afe4e3b3d
   subpackages:
   - spew
 - name: github.com/pmezard/go-difflib
