@@ -23,16 +23,16 @@ const RsyslogTemplate = `
 ######################################
 
 input(type="imfile"
-		File="{{ .WorkDir }}/{{ .FileName }}"
-		Tag="{{ .CleanAppName }}	{{.TaskID}}"
-    Severity="info")
+	File="{{ .WorkDir }}/{{ .FileName }}"
+	Tag="{{ .CleanAppName }}	{{.TaskID}}"
+	Severity="info")
 `
 
 // Rsyslog backend implementation
 type Rsyslog struct {
-	WorkDir string
+	WorkDir              string
 	SyslogConfigLocation string
-	RestartCommand string
+	RestartCommand       string
 }
 
 // AddTask - Adds a task definition file to FS
@@ -48,7 +48,7 @@ func (r *Rsyslog) AddTask(taskInfo TaskInfo) error {
 	// we can reduce the length of the file path that we provide as
 	// part of configs in rsyslog's imfile directive.
 	// When the full file path > 200, rsyslog crashes with "buffer overflow" (evil smile)
-	err = os.Symlink(taskInfo.CWD, fmt.Sprintf("%s/%s", r.WorkDir, taskInfo.TaskID))
+	err = os.Symlink(taskInfo.CWD, r.symlink(taskInfo.TaskID))
 	if err != nil {
 		fmt.Printf("[ERROR] %v\n", err)
 		return err
@@ -65,7 +65,7 @@ func (r *Rsyslog) AddTask(taskInfo TaskInfo) error {
 	return err
 }
 
-// RemoveTask - Remove a task definition from the FS
+// TODO - RemoveTask removes a task definition from the FS
 func (r *Rsyslog) RemoveTask(taskId string) error {
 	fmt.Printf("[Rsyslog] Remove task info for %v\n", taskId)
 	return nil
@@ -82,7 +82,11 @@ func (r *Rsyslog) render(taskInfo TaskInfo) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	taskInfo.WorkDir = fmt.Sprintf("%s/%s", r.WorkDir, taskInfo.TaskID)
+	taskInfo.WorkDir = r.symlink(taskInfo.TaskID)
 	err = tmpl.Execute(&configInBytes, &taskInfo)
 	return configInBytes.String(), err
+}
+
+func (r *Rsyslog) symlink(taskId string) string {
+	return fmt.Sprintf("%s/%s", r.WorkDir, taskId)
 }
