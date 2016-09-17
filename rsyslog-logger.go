@@ -65,10 +65,27 @@ func (r *Rsyslog) AddTask(taskInfo TaskInfo) error {
 	return err
 }
 
-// TODO - RemoveTask removes a task definition from the FS
+// RemoveTask removes a task definition from the FS
 func (r *Rsyslog) RemoveTask(taskId string) error {
 	fmt.Printf("[Rsyslog] Remove task info for %v\n", taskId)
-	return nil
+	// remove the rsyslog conf file
+	rsyslogConfig := fmt.Sprintf("%s/%s-%s.conf", r.SyslogConfigLocation, CommonPrefixToConfigFiles, taskId)
+	err := os.Remove(rsyslogConfig)
+	if err != nil {
+		fmt.Printf("[ERROR] %v\n", err)
+		return err
+	}
+
+	// remove the symlink created in the workding dir
+	symlinkFile := r.symlink(taskId)
+	err = os.Remove(symlinkFile)
+	if err != nil {
+		fmt.Printf("[ERROR] %v\n", err)
+		return err
+	}
+
+	err = exec.Command("/bin/sh", "-c", r.RestartCommand).Run()
+	return err
 }
 
 // TODO - Integrate it with LogManager
