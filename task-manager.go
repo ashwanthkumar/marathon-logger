@@ -21,6 +21,7 @@ type TaskInfo struct {
 	Hostname string
 	CWD      string // Current working directory of the task in the slave
 	FileName string // Actual file name to that we need monitor for logs
+	WorkDir  string // WorkDir location of marathon-logger where we setup Symlink
 }
 
 // CleanAppName cleans the app-name string for `/` characters

@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"io/ioutil"
+	"os"
 	"os/exec"
 	"text/template"
 )
@@ -21,19 +22,17 @@ const RsyslogTemplate = `
 # File - {{ .FileName }}
 ######################################
 
-module(load="imfile")
-
 input(type="imfile"
-			File="{{ .CWD }}/{{ .FileName }}"
-			Tag="{{ .CleanAppName }}	{{.TaskID}}"
-			statefile="{{ .TaskID }}"
-      Severity="info")
+	File="{{ .WorkDir }}/{{ .FileName }}"
+	Tag="{{ .CleanAppName }}	{{.TaskID}}"
+	Severity="info")
 `
 
 // Rsyslog backend implementation
 type Rsyslog struct {
-	ConfigLocation string
-	RestartCommand string
+	WorkDir              string
+	SyslogConfigLocation string
+	RestartCommand       string
 }
 
 // AddTask - Adds a task definition file to FS
@@ -44,18 +43,29 @@ func (r *Rsyslog) AddTask(taskInfo TaskInfo) error {
 		fmt.Printf("[ERROR] %v\n", err)
 		return err
 	}
-	// TODO - Support multiple file configurations
-	configFileLocation := fmt.Sprintf("%s/%s-%s.conf", r.ConfigLocation, CommonPrefixToConfigFiles, taskInfo.TaskID)
+
+	// We create symlink of the tasks' sandbox dir so that,
+	// we can reduce the length of the file path that we provide as
+	// part of configs in rsyslog's imfile directive.
+	// When the full file path > 200, rsyslog crashes with "buffer overflow" (evil smile)
+	err = os.Symlink(taskInfo.CWD, r.symlink(taskInfo.TaskID))
+	if err != nil {
+		fmt.Printf("[ERROR] %v\n", err)
+		return err
+	}
+
+	configFileLocation := fmt.Sprintf("%s/%s-%s.conf", r.SyslogConfigLocation, CommonPrefixToConfigFiles, taskInfo.TaskID)
 	err = ioutil.WriteFile(configFileLocation, []byte(template), 0644)
 	if err != nil {
 		fmt.Printf("[ERROR] %v\n", err)
 		return err
 	}
+
 	err = exec.Command("/bin/sh", "-c", r.RestartCommand).Run()
 	return err
 }
 
-// RemoveTask - Remove a task definition from the FS
+// TODO - RemoveTask removes a task definition from the FS
 func (r *Rsyslog) RemoveTask(taskId string) error {
 	fmt.Printf("[Rsyslog] Remove task info for %v\n", taskId)
 	return nil
@@ -72,6 +82,11 @@ func (r *Rsyslog) render(taskInfo TaskInfo) (string, error) {
 	if err != nil {
 		return "", err
 	}
+	taskInfo.WorkDir = r.symlink(taskInfo.TaskID)
 	err = tmpl.Execute(&configInBytes, &taskInfo)
 	return configInBytes.String(), err
+}
+
+func (r *Rsyslog) symlink(taskId string) string {
+	return fmt.Sprintf("%s/%s", r.WorkDir, taskId)
 }
