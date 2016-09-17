@@ -1,5 +1,5 @@
 APPNAME = marathon-logger
-VERSION=0.0.1-dev
+VERSION=0.0.5
 TESTFLAGS=-v -cover -covermode=atomic -bench=.
 TEST_COVERAGE_THRESHOLD=8.0
 
