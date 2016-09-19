@@ -22,6 +22,8 @@ const RsyslogTemplate = `
 # File - {{ .FileName }}
 ######################################
 
+module(load="imfile")
+
 input(type="imfile"
 	File="{{ .WorkDir }}/{{ .FileName }}"
 	Tag="{{ .CleanAppName }}	{{.TaskID}}"
