@@ -33,6 +33,8 @@ func TestRenderRsyslogTemplate(t *testing.T) {
 # File - test_file_name.txt
 ######################################
 
+module(load="imfile")
+
 input(type="imfile"
 	File="/foo/bar/abcdefghij/test_file_name.txt"
 	Tag="test.aayush.http	abcdefghij"
