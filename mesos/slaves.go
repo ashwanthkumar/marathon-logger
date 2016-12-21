@@ -2,6 +2,7 @@ package mesos
 
 import (
 	"encoding/json"
+	"time"
 
 	"github.com/parnurzeal/gorequest"
 )
@@ -39,6 +40,7 @@ func (m *MesosClient) SlaveState(slaveHost string) (SlaveState, error) {
 	request := gorequest.New()
 	response, body, errs := request.
 		Get(slaveHost).
+		Timeout(10 * time.Minute).
 		End()
 
 	var slaveState SlaveState
