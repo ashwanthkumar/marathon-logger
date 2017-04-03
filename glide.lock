@@ -1,40 +1,38 @@
 hash: f6fb8aeb274a3a8fc0a91354a0dcbb6301e877a15c97dd3280378bbbc72420b9
-updated: 2016-08-08T16:53:26.509201112+05:30
+updated: 2017-03-30T16:49:01.693694344+05:30
 imports:
 - name: github.com/ashwanthkumar/golang-utils
-  version: 6362d7ff76b62be7ac4ef53aad5812791b390974
+  version: ca70cd2b7edf2c1e819bbb0299a4e158f173d1cc
   subpackages:
   - maps
   - netutil
-- name: github.com/ashwanthkumar/marathon-logger
-  version: f3b9e4491a7a7931d8b21b64ff9a6f42ebe74761
-  subpackages:
-  - mesos
 - name: github.com/donovanhide/eventsource
-  version: c3f57f280ec708df24886d9e62f2fd178d69d8e8
+  version: fd1de70867126402be23c306e1ce32828455d85b
 - name: github.com/gambol99/go-marathon
-  version: a78e3aa5d5ca7d5b14eafc3239d61bb53af17434
+  version: 48f66461ea089ac5f96f0c72e43c0b2acef8e7c2
 - name: github.com/google/go-querystring
-  version: 6bb77fe6f42b85397288d4f6f67ac72f8f400ee7
+  version: 53e6ce116135b80d037921a7fdd5138cf32d7a8a
   subpackages:
   - query
 - name: github.com/moul/http2curl
-  version: 1812aee76a1ce98d604a44200c6a23c689b17a89
+  version: 4e24498b31dba4683efb9d35c1c8a91e2eda28c8
 - name: github.com/parnurzeal/gorequest
-  version: 91b42fce877cc6af96c45818665a4c615cc5f4ee
+  version: ea779001e09326d30d455dbf37bc0d08c49941a2
+- name: github.com/pkg/errors
+  version: ff09b135c25aae272398c51a07235b90a75aa4f0
 - name: github.com/spf13/pflag
-  version: 7f60f83a2c81bc3c3c0d5297f61ddfa68da9d3b7
+  version: d16db1e50e33dff1b6cdf37596cef36742128670
 - name: github.com/stretchr/testify
-  version: f390dcf405f7b83c997eac1b06768bb9f44dec18
+  version: 69483b4bd14f5845b5a1e55bca19e954e827f1d0
   subpackages:
   - assert
 - name: golang.org/x/net
-  version: e45385e9b226f570b1f086bf287b25d3d4117776
+  version: ffcf1bedda3b04ebb15a168a59800a73d6dc0f4d
   subpackages:
   - publicsuffix
 testImports:
 - name: github.com/davecgh/go-spew
-  version: 5215b55f46b2b919f50a1df0eaa5886afe4e3b3d
+  version: 6d212800a42e8ab5c146b8ace3490ee17e5225f9
   subpackages:
   - spew
 - name: github.com/pmezard/go-difflib

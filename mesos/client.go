@@ -1,12 +1,22 @@
 package mesos
 
-import "errors"
+import (
+	"errors"
+	"github.com/parnurzeal/gorequest"
+)
 
 type Mesos interface {
 	SlaveState(slaveHost string) (SlaveState, error)
 }
 
-type MesosClient struct {
+type mesosClient struct {
+	Request *gorequest.SuperAgent
+}
+
+func NewMesosClient() Mesos {
+	client := new(mesosClient)
+	client.Request = gorequest.New()
+	return client
 }
 
 func combineErrors(errs []error) error {

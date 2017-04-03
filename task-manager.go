@@ -15,13 +15,13 @@ import (
 const LogFilesToMonitor = "logs.files"
 
 type TaskInfo struct {
-	App      string
-	Labels   map[string]string
-	TaskID   string
-	Hostname string
-	CWD      string // Current working directory of the task in the slave
-	FileName string // Actual file name to that we need monitor for logs
-	WorkDir  string // WorkDir location of marathon-logger where we setup Symlink
+	App       string
+	Labels    map[string]string
+	TaskID    string
+	Hostname  string
+	CWD       string // Current working directory of the task in the slave
+	FileNames []string // Actual file name to that we need monitor for logs
+	WorkDir   string // WorkDir location of marathon-logger where we setup Symlink
 }
 
 // CleanAppName cleans the app-name string for `/` characters
@@ -54,7 +54,7 @@ func (t *TaskManager) Start() {
 	t.AddLogs = make(chan TaskInfo)
 	t.RemoveLogs = make(chan string)
 	t.KnownTasks = make(map[string]time.Time)
-	t.Client = &mesos.MesosClient{}
+	t.Client = mesos.NewMesosClient()
 	go t.run()
 	fmt.Println("Task Manager Started.")
 	fmt.Printf("Task Manager - Task's MaxHeartBeatInterval is %v\n", t.MaxTasksHeartBeatInterval)
@@ -101,18 +101,16 @@ func (t *TaskManager) run() {
 				if executor != nil {
 					logFiles := strings.Split(maps.GetString(task.Labels, LogFilesToMonitor, "stdout"), ",")
 					t.KnownTasks[task.TaskID] = time.Now()
-					for _, file := range logFiles {
-						taskInfo := TaskInfo{
-							App:      task.App,
-							Hostname: task.Hostname,
-							Labels:   task.Labels,
-							TaskID:   task.TaskID,
-							CWD:      executor.Directory,
-							FileName: file,
-						}
-						// fmt.Printf("%v\n", taskInfo)
-						t.AddLogs <- taskInfo
+					taskInfo := TaskInfo{
+						App:      task.App,
+						Hostname: task.Hostname,
+						Labels:   task.Labels,
+						TaskID:   task.TaskID,
+						CWD:      executor.Directory,
+						FileNames: logFiles,
 					}
+					// fmt.Printf("%v\n", taskInfo)
+					t.AddLogs <- taskInfo
 				} else {
 					log.Printf("[WARN] Couldn't find the executor that spun up the task %s", task.TaskID)
 				}
