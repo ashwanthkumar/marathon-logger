@@ -19,15 +19,16 @@ const RsyslogTemplate = `
 # Created via marathon-logger,
 # PLEASE DON'T EDIT THIS FILE MANUALLY
 # Name - {{ .App }}
-# File - {{ .FileName }}
+# File - {{ .FileNames }}
 ######################################
 
 module(load="imfile")
-
+{{range $fileName := .FileNames}}
 input(type="imfile"
-	File="{{ .WorkDir }}/{{ .FileName }}"
-	Tag="{{ .CleanAppName }}	{{.TaskID}}"
+	File="{{ $.WorkDir }}/{{$fileName}}"
+	Tag="{{$.CleanAppName}}	{{$.TaskID}}	{{$fileName}}"
 	Severity="info")
+{{end}}
 `
 
 // Rsyslog backend implementation

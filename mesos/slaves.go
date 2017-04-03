@@ -3,8 +3,6 @@ package mesos
 import (
 	"encoding/json"
 	"time"
-
-	"github.com/parnurzeal/gorequest"
 )
 
 type SlaveState struct {
@@ -36,9 +34,9 @@ type Executor struct {
 	Source    string `json:"source"`
 }
 
-func (m *MesosClient) SlaveState(slaveHost string) (SlaveState, error) {
-	request := gorequest.New()
-	response, body, errs := request.
+
+func (m *mesosClient) SlaveState(slaveHost string) (SlaveState, error) {
+	response, body, errs := m.Request.
 		Get(slaveHost).
 		Timeout(10 * time.Minute).
 		End()
