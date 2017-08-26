@@ -9,7 +9,7 @@ import (
 	"time"
 
 	"github.com/ashwanthkumar/golang-utils/maps"
-	"github.com/ashwanthkumar/marathon-logger/mesos"
+	"github.com/indix/marathon-logger/mesos"
 )
 
 const LogFilesToMonitor = "logs.files"
