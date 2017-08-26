@@ -2,4 +2,4 @@ marathon-logger
 marathon-logger-*
 vendor/
 *.txt
-
+.DS_Store
