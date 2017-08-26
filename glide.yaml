@@ -1,4 +1,4 @@
-package: github.com/ashwanthkumar/marathon-logger
+package: github.com/indix/marathon-logger
 import:
 - package: github.com/ashwanthkumar/golang-utils
   subpackages:
