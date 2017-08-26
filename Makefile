@@ -28,10 +28,10 @@ setup:
 	glide install
 
 test-only:
-	go test ${TESTFLAGS} -coverprofile=${name}.txt github.com/ashwanthkumar/marathon-logger/${name}
+	go test ${TESTFLAGS} -coverprofile=${name}.txt github.com/indix/marathon-logger/${name}
 
 test:
-	go test ${TESTFLAGS} -coverprofile=main.txt github.com/ashwanthkumar/marathon-logger/
+	go test ${TESTFLAGS} -coverprofile=main.txt github.com/indix/marathon-logger/
 
 ci: test-ci
 
