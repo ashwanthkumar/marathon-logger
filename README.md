@@ -1,4 +1,4 @@
-[![Build Status](https://snap-ci.com/ashwanthkumar/marathon-logger/branch/master/build_image)](https://snap-ci.com/ashwanthkumar/marathon-logger/branch/master)
+[![Build Status](https://travis-ci.org/indix/marathon-logger.svg?branch=master)](https://travis-ci.org/indix/marathon-logger)
 # Marathon-Logger
 
 Marathon logger is a simple tool that's meant to be deployed on all the Mesos slaves and run as a daemon. It monitors the logs for each app task and pushes it to a logging backend (syslog for now).
