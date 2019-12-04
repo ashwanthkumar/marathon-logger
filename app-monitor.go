@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"os"
 	"sync"
 	"time"
 
@@ -75,13 +76,16 @@ func (a *AppMonitor) monitorApps() error {
 				return err
 			}
 			for _, task := range app.Tasks {
-				taskInfo := Task{
-					App:      app.ID,
-					Labels:   *app.Labels,
-					TaskID:   task.ID,
-					Hostname: task.Host,
+				addr, _ := os.Hostname()
+				if task.Host == addr {
+					taskInfo := Task{
+						App:      app.ID,
+						Labels:   *app.Labels,
+						TaskID:   task.ID,
+						Hostname: task.Host,
+					}
+					a.TasksChannel <- taskInfo
 				}
-				a.TasksChannel <- taskInfo
 			}
 		}
 	}
